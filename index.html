@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="
+https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
+" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="
+        https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css
+        " rel="stylesheet">
+  </head>
+  <body>
+
+    <h1 class="title">Rick And Morty Slider</h1>
+    <div class="splide" role="group" aria-label="Splide Basic HTML Example">
+      <div class="splide__track">
+        <ul class="splide__list">
+
+        </ul>
+      </div>
+    </div>
+
+    <script src="
+        https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
+        "></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/constant.js"></script>
+
+    <script>
+            
+
+
+            getAllCharacters(renderChars);
+
+              
+            function renderChars(chars){
+            
+                const slider = document.querySelector(".splide__list");
+             
+                chars.results.forEach(char =>
+                {
+                    let statusColor = "";
+
+                    switch (char.status) {
+                      case "Alive":
+                      statusColor = "green";
+                        break;
+                      case "Dead":
+                      statusColor = "red";
+                        break;
+                      case "unknown":
+                      statusColor = "gray";
+                        break;
+                    }
+                
+
+                    const charItem = `
+                    <li class="splide__slide">
+                    <div class="card">
+                      <img
+                        src="${char.image}"
+                        alt="${char.name}"
+                      />
+                      <div class="content">
+                        <p>${char.name}</p>
+                        <p><i class="fa-solid fa-circle fa-2xs"
+                            style="color:${statusColor}"></i> ${char.status} - ${char.species}</p>
+                      </div>
+                    </div>
+                    </li>
+                    `;
+                    slider.innerHTML += charItem;
+                }
+                );
+            }
+
+
+            new Splide(".splide", {
+                type: "loop",
+                perPage: 3,
+                width: "70%",
+                height: "450px",
+                gap: 20,
+                breakpoints: {
+                  1450: {
+                    width: "80%",
+                    perPage: 2,
+                  },
+                  850: {
+                    width: "90%",
+                    perPage: 1,
+                  },
+                },
+              }).mount();
+          
+
+        </script>
+  </body>
+
+</html>
