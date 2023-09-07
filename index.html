@@ -15,14 +15,16 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
   <body>
 
     <h1 class="title">Rick And Morty Slider</h1>
-    <div class="splide" role="group" aria-label="Splide Basic HTML Example">
-      <div class="splide__track">
-        <ul class="splide__list">
 
-        </ul>
+    <div class="wrapper">
+      <div class="splide" role="group">
+        <div class="splide__track">
+          <ul class="splide__list">
+
+          </ul>
+        </div>
       </div>
     </div>
-
     <script src="
         https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
         "></script>
@@ -30,71 +32,72 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
     <script src="./js/constant.js"></script>
 
     <script>
-            
+      const slider = document.querySelector(".splide__list");
 
-
-            getAllCharacters(renderChars);
-
-              
-            function renderChars(chars){
-            
-                const slider = document.querySelector(".splide__list");
-             
-                chars.results.forEach(char =>
-                {
-                    let statusColor = "";
-
-                    switch (char.status) {
-                      case "Alive":
-                      statusColor = "green";
-                        break;
-                      case "Dead":
-                      statusColor = "red";
-                        break;
-                      case "unknown":
-                      statusColor = "gray";
-                        break;
-                    }
-                
-
-                    const charItem = `
-                    <li class="splide__slide">
-                    <div class="card">
-                      <img
-                        src="${char.image}"
-                        alt="${char.name}"
-                      />
-                      <div class="content">
-                        <p>${char.name}</p>
-                        <p><i class="fa-solid fa-circle fa-2xs"
-                            style="color:${statusColor}"></i> ${char.status} - ${char.species}</p>
-                      </div>
-                    </div>
-                    </li>
-                    `;
-                    slider.innerHTML += charItem;
-                }
-                );
-            }
-
-
-            new Splide(".splide", {
-                type: "loop",
-                perPage: 3,
-                width: "70%",
-                height: "450px",
-                gap: 20,
-                breakpoints: {
-                  1450: {
-                    width: "80%",
-                    perPage: 2,
-                  },
-                  850: {
-                    width: "90%",
-                    perPage: 1,
-                  },
-                },
-              }).mount();
+      async function getData() {
+        let characters = [];
+        await fetch("https://rickandmortyapi.com/api/character")
+          .then((response) => response.json())
+          .then((res) => {
+            characters = res.results;
+          });
+        console.log(characters);
+      
+        characters.forEach((item) => {
+          let status = "";
+      
+          switch (item.status) {
+            case "Alive":
+              status = "green";
+              break;
+            case "Dead":
+              status = "red";
+              break;
+            case "unknown":
+              status = "gray";
+              break;
+          }
+      
+          const charItem = `
+          <li class="splide__slide">
+          <div class="card">
+            <img
+              src="${item.image}"
+              alt="${item.name}"
+            />
+            <div class="content">
+              <p>${item.name}</p>
+              <p><span class="circle ${status}"></span> ${item.status} - ${item.species}</p>
+            </div>
+          </div>
+          </li>
+          `;
+          slider.innerHTML += charItem;
+        });
+      
+        //  <li class="splide__slide"><img src='${item.image}' alt='${item.name}'/></li>
+      
+        new Splide(".splide", {
+          type: "loop",
+          perPage: 3,
+          width: "65%",
+          height: "450px",
+          gap: 20,
+          breakpoints: {
+            1450: {
+              width: "80%",
+              perPage: 2,
+            },
+            850: {
+              width: "90%",
+              perPage: 1,
+            },
+          },
+        }).mount();
+      }
+      
+      document.addEventListener("DOMContentLoaded", getData);
+      
           
 
         </script>
